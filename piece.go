@@ -1,13 +1,19 @@
 package main
 
-import "strconv"
-
 //Rank represents the rank of a piece
+//go:generate enumer -type=Rank
 type Rank int
 
-func (r Rank) String() string {
-	return strconv.Itoa(int(r))
-}
+//Rank rank pieces
+const (
+	Flag Rank = iota
+	Spy
+	Scout
+	Miner
+	Captain
+	General
+	Marshal
+)
 
 //Piece :game piece
 type Piece struct {
