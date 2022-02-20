@@ -120,7 +120,56 @@ func TestMiniCreation(t *testing.T) {
 	}
 }
 
-func TestMiniGame1(t *testing.T) {
+func TestMiniGameDemo(t *testing.T) {
+	g, err := dummyMiniGame()
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !g.Start() {
+		t.Fatal("could not start mini game")
+	}
+	if g.state != gameTurnRed {
+		t.Error("game starting on wrong turn")
+	}
+	r := NewDummyPlayer(Red)
+	b := NewDummyPlayer(Blue)
+	var moves = []struct {
+		input  string
+		player Player
+		res    bool
+	}{
+		{"c3-b3", r, true},
+		{"c0-c1", b, true},
+		{"d2xd1", r, true},
+		{"c1-d1", b, true},
+		{"b3-c3", r, true},
+		{"d1xd2", b, true},
+	}
+	i := 0
+	for _, tt := range moves {
+		tname := fmt.Sprintf("%v input: %v", i, tt.input)
+		i++
+		t.Run(tname, func(t *testing.T) {
+			raw, err := NewRawCommand(tt.input)
+			if err != nil {
+				t.Fatalf("error creating RawCommand from %v:%v", tt.input, err)
+			}
+			parsed, err := g.Parse(tt.player, raw)
+			if err != nil {
+				t.Fatal(err)
+			}
+			res, err := g.Mutate(parsed)
+			if err != nil {
+				t.Error(err)
+			}
+			if tt.res != res {
+				t.Errorf("Expected command to be %v but was %v", tt.res, res)
+			}
+		})
+	}
+}
+
+func TestMiniGameFull(t *testing.T) {
 	g, err := dummyMiniGame()
 	if err != nil {
 		t.Fatal(err)
