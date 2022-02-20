@@ -8,7 +8,7 @@ import (
 	"strings"
 )
 
-var cmdRegxp = regexp.MustCompile("([a-zA-Z])([1-9])(x|-)([a-zA-Z])([1-9])")
+var cmdRegxp = regexp.MustCompile("([a-zA-Z])([0-9])(x|-)([a-zA-Z])([0-9])")
 var ranks = "ABCDEFHIJKLMNOPQRSTUVWXYZ"
 
 //RawCommand is a game command, converted from algebraic notation

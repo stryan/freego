@@ -19,6 +19,7 @@ const (
 )
 
 //Colour reperensents player colour
+//go:generate enumer -type=Colour
 type Colour int
 
 //Colour consts
@@ -112,7 +113,7 @@ func (g *Game) Mutate(cmd *ParsedCommand) (bool, error) {
 			return false, errors.New("bad game state")
 		}
 	}
-	return true, nil
+	return res, nil
 }
 
 //SetupPiece adds a piece to the board during setup
@@ -120,11 +121,14 @@ func (g *Game) SetupPiece(x, y int, p *Piece) (bool, error) {
 	if g.state != gameSetup {
 		return false, errors.New("Trying to setup piece when  not in setup")
 	}
+	if p == nil {
+		return false, errors.New("Tried to setup a nil piece")
+	}
 	if !g.board.validatePoint(x, y) {
 		return false, errors.New("Invalid location")
 	}
 	if p.Owner != g.board.GetColor(x, y) {
-		return false, errors.New("Can't setup piece on enemy board")
+		return false, fmt.Errorf("Can't setup piece on enemy board: %v != %v", p.Owner, g.board.GetColor(x, y))
 	}
 	return g.board.Place(x, y, p)
 }
@@ -208,7 +212,7 @@ func (g *Game) strike(x, y, s, t int) (bool, error) {
 		//endPiece lost
 		g.board.Remove(s, t)
 		//scouts replace the piece that was destroyed
-		if startPiece.Rank == 1 {
+		if startPiece.Rank == Scout {
 			g.board.Remove(x, y)
 			g.board.Place(s, t, startPiece)
 		}
@@ -228,11 +232,15 @@ func (g *Game) combat(atk, def *Piece) (int, error) {
 	}
 	//handle special cases first
 	//miner hitting bomb
-	if atk.Rank == 3 && def.Rank == 12 {
+	if atk.Rank == Miner && def.Rank == Bomb {
 		return 1, nil
 	}
+	//anyone else hitting bomb
+	if def.Rank == Bomb {
+		return -1, nil
+	}
 	//spy hitting marshal
-	if atk.Rank == 0 && def.Rank == 10 {
+	if atk.Rank == Spy && def.Rank == Marshal {
 		return 1, nil
 	}
 	//normal cases

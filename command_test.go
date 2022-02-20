@@ -17,6 +17,7 @@ func TestNewRawCommand(t *testing.T) {
 	}{
 		{"A1xC3", true, 0, 1, 2, 3, "x"},
 		{"d7-d1", true, 3, 7, 3, 1, "-"},
+		{"c0-c1", true, 2, 0, 2, 1, "-"},
 		{"AA-k3", false, 0, 0, 0, 0, ""},
 		{"a1/b4", false, 0, 0, 0, 0, ""},
 	}

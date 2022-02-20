@@ -47,7 +47,7 @@ func TestNewBoard(t *testing.T) {
 
 func TestGetPiece(t *testing.T) {
 	b := NewBoard(4)
-	p := NewPiece(2, Red)
+	p := NewPieceFromInt(2, Red)
 	b.board[0][0].entity = p
 	np, err := b.GetPiece(9, 9)
 	if err == nil {
@@ -68,7 +68,7 @@ func TestGetPiece(t *testing.T) {
 
 func TestPlace(t *testing.T) {
 	b := NewBoard(4)
-	p := NewPiece(2, Red)
+	p := NewPieceFromInt(2, Red)
 	res, err := b.Place(8, 9, p)
 	if err == nil {
 		t.Errorf("able to place in invalid location")
@@ -94,7 +94,7 @@ func TestPlace(t *testing.T) {
 
 func TestRemove(t *testing.T) {
 	b := NewBoard(4)
-	p := NewPiece(2, Red)
+	p := NewPieceFromInt(2, Red)
 
 	res, err := b.Place(0, 0, p)
 	if err != nil {

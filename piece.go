@@ -13,6 +13,7 @@ const (
 	Captain
 	General
 	Marshal
+	Bomb
 )
 
 //Piece :game piece
@@ -22,10 +23,19 @@ type Piece struct {
 	Hidden bool
 }
 
-//NewPiece creates a new piece
-func NewPiece(r int, o Colour) *Piece {
+//NewPieceFromInt creates a new piece
+func NewPieceFromInt(r int, o Colour) *Piece {
 	return &Piece{
 		Rank:   Rank(r),
+		Owner:  o,
+		Hidden: false,
+	}
+}
+
+//NewPiece generates a piece by rank
+func NewPiece(r Rank, o Colour) *Piece {
+	return &Piece{
+		Rank:   r,
 		Owner:  o,
 		Hidden: false,
 	}
