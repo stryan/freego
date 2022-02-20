@@ -94,7 +94,7 @@ func (t *Tile) Y() int {
 }
 
 //AddTerrain adds specified terrain to position
-func (t *Tile) AddTerrain() bool {
+func (t *Tile) AddTerrain(ter int) bool {
 	if t.entity != nil {
 		return false
 	}

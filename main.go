@@ -49,7 +49,7 @@ func addpiece(game *Game, rank int, c Colour, x int, y int) {
 }
 
 func addriver(game *Game, x int, y int) {
-	res, err := game.board.AddRiver(x, y)
+	res, err := game.board.AddTerrain(x, y, 1)
 	if err != nil {
 		panic(err)
 	}

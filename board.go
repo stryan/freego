@@ -10,14 +10,17 @@ type Board struct {
 
 //NewBoard creates a new board instance
 func NewBoard(size int) *Board {
+	if size < 4 || size%2 != 0 {
+		return nil
+	}
 	b := make([][]*Tile, size)
 	var colour Colour
 	for i := 0; i < size; i++ {
 		b[i] = make([]*Tile, size)
 		if i < size/2 {
-			colour = Blue
-		} else {
 			colour = Red
+		} else {
+			colour = Blue
 		}
 		for j := 0; j < size; j++ {
 			b[i][j] = &Tile{i, j, true, nil, colour}
@@ -76,11 +79,11 @@ func (b *Board) GetColor(x, y int) Colour {
 	return b.board[x][y].Colour()
 }
 
-//AddRiver puts a river tile at specified location
-func (b *Board) AddRiver(x, y int) (bool, error) {
+//AddTerrain puts a river tile at specified location
+func (b *Board) AddTerrain(x, y, t int) (bool, error) {
 	if !b.validatePoint(x, y) {
 		return false, errors.New("River invalid location")
 	}
-	b.board[x][y].AddTerrain()
+	b.board[x][y].AddTerrain(t)
 	return true, nil
 }
