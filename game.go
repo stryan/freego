@@ -157,17 +157,17 @@ func (g *Game) move(x, y, s, t int) (bool, error) {
 	if endPiece != nil {
 		return false, nil
 	}
+	//attempt to remove starting piece first
+	err = g.board.Remove(x, y)
+	if err != nil {
+		return false, err
+	}
+	// then place piece in new location
 	res, err := g.board.Place(s, t, startPiece)
 	if err != nil {
 		return false, err
 	}
-	if res {
-		err = g.board.Remove(x, y)
-		if err != nil {
-			return false, err
-		}
-	}
-	return true, nil
+	return res, nil
 }
 
 func (g *Game) strike(x, y, s, t int) (bool, error) {
@@ -203,18 +203,36 @@ func (g *Game) strike(x, y, s, t int) (bool, error) {
 	switch r {
 	case -1:
 		//startPiece lost
-		g.board.Remove(x, y)
+		err = g.board.Remove(x, y)
+		if err != nil {
+			return true, err
+		}
 	case 0:
 		//tie
-		g.board.Remove(x, y)
-		g.board.Remove(s, t)
+		err = g.board.Remove(x, y)
+		err2 := g.board.Remove(s, t)
+		if err != nil || err2 != nil {
+			return true, fmt.Errorf("Errors: %v %v", err, err2)
+		}
 	case 1:
 		//endPiece lost
-		g.board.Remove(s, t)
+		err := g.board.Remove(s, t)
+		if err != nil {
+			return true, err
+		}
 		//scouts replace the piece that was destroyed
 		if startPiece.Rank == Scout {
-			g.board.Remove(x, y)
-			g.board.Place(s, t, startPiece)
+			err = g.board.Remove(x, y)
+			if err != nil {
+				return true, err
+			}
+			res, err := g.board.Place(s, t, startPiece)
+			if err != nil {
+				return true, err
+			}
+			if !res {
+				return false, errors.New("Combat was valid but somehow placing the new piece was not")
+			}
 		}
 	}
 	return true, nil
