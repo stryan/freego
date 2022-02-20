@@ -20,7 +20,7 @@ func (t *Tile) String() string {
 		icon = "X"
 	} else if t.entity != nil {
 		if !t.entity.Hidden {
-			icon = t.entity.Rank.String()
+			icon = "P"
 		} else {
 			icon = "O"
 		}
