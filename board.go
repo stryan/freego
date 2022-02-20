@@ -47,7 +47,7 @@ func (b *Board) GetPiece(x, y int) (*Piece, error) {
 	if !b.validatePoint(x, y) {
 		return nil, errors.New("GetPiece invalid location")
 	}
-	return b.board[x][y].Piece(), nil
+	return b.board[y][x].Piece(), nil
 }
 
 //Place a piece on the board; returns false if a piece is already there
@@ -55,10 +55,10 @@ func (b *Board) Place(x, y int, p *Piece) (bool, error) {
 	if !b.validatePoint(x, y) {
 		return false, errors.New("Place invalid location")
 	}
-	if b.board[x][y].Piece() != nil {
+	if b.board[y][x].Piece() != nil {
 		return false, nil
 	}
-	err := b.board[x][y].Place(p)
+	err := b.board[y][x].Place(p)
 	if err != nil {
 		return false, err
 	}
@@ -70,13 +70,13 @@ func (b *Board) Remove(x, y int) error {
 	if !b.validatePoint(x, y) {
 		return errors.New("Remove invalid location")
 	}
-	b.board[x][y].Remove()
+	b.board[y][x].Remove()
 	return nil
 }
 
 //GetColor returns color of tile
 func (b *Board) GetColor(x, y int) Colour {
-	return b.board[x][y].Colour()
+	return b.board[y][x].Colour()
 }
 
 //AddTerrain puts a river tile at specified location
@@ -84,6 +84,6 @@ func (b *Board) AddTerrain(x, y, t int) (bool, error) {
 	if !b.validatePoint(x, y) {
 		return false, errors.New("River invalid location")
 	}
-	b.board[x][y].AddTerrain(t)
+	b.board[y][x].AddTerrain(t)
 	return true, nil
 }
