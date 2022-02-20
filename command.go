@@ -9,7 +9,7 @@ import (
 )
 
 var cmdRegxp = regexp.MustCompile("([a-zA-Z])([1-9])(x|-)([a-zA-Z])([1-9])")
-var ranks = "ABCDEFHI"
+var ranks = "ABCDEFHIJKLMNOPQRSTUVWXYZ"
 
 //RawCommand is a game command, converted from algebraic notation
 type RawCommand struct {
@@ -22,21 +22,31 @@ type RawCommand struct {
 
 //NewRawCommand creates a RawCommand struct from a algebraic notation string
 func NewRawCommand(cmd string) (*RawCommand, error) {
-	res := cmdRegxp.FindAllString(cmd, -1)
-	if res == nil {
+	rawRes := cmdRegxp.FindAllStringSubmatch(cmd, -1)
+	if rawRes == nil {
 		return nil, errors.New("error creating command from string")
 	}
-	sx := strings.Index(ranks, res[0])
-	dx := strings.Index(ranks, res[3])
-	sy, err := strconv.Atoi(res[1])
+	res := rawRes[0]
+	if len(res) != 6 {
+		return nil, fmt.Errorf("expected more fields from command string 5!=%v, %v", len(res), res)
+	}
+	sx := strings.Index(ranks, strings.ToUpper(res[1]))
+	if sx == -1 {
+		return nil, fmt.Errorf("bad rank value: %v", res[1])
+	}
+	dx := strings.Index(ranks, strings.ToUpper(res[4]))
+	if dx == -1 {
+		return nil, fmt.Errorf("bad rank value: %v", strings.ToUpper(res[4]))
+	}
+	sy, err := strconv.Atoi(res[2])
 	if err != nil {
 		return nil, err
 	}
-	dy, err := strconv.Atoi(res[4])
+	dy, err := strconv.Atoi(res[5])
 	if err != nil {
 		return nil, err
 	}
-	return &RawCommand{sx, sy, dx, dy, res[2]}, nil
+	return &RawCommand{sx, sy, dx, dy, res[3]}, nil
 }
 
 func (c *RawCommand) String() string {

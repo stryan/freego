@@ -130,8 +130,12 @@ func (g *Game) SetupPiece(x, y int, p *Piece) (bool, error) {
 }
 
 //Start start the game
-func (g *Game) Start() {
-	g.state = gameTurnRed
+func (g *Game) Start() bool {
+	if g.state == gameSetup {
+		g.state = gameTurnRed
+		return true
+	}
+	return false
 }
 
 func (g *Game) move(x, y, s, t int) (bool, error) {

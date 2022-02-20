@@ -128,7 +128,7 @@ func TestRemove(t *testing.T) {
 
 func TestGetColor(t *testing.T) {
 	b := NewBoard(4)
-	if b.GetColor(0, 0) != Red {
+	if b.GetColor(0, 0) != Blue {
 		t.Errorf("got wrong color for tile: %v", b.GetColor(0, 0))
 	}
 }

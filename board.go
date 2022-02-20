@@ -18,9 +18,9 @@ func NewBoard(size int) *Board {
 	for i := 0; i < size; i++ {
 		b[i] = make([]*Tile, size)
 		if i < size/2 {
-			colour = Red
-		} else {
 			colour = Blue
+		} else {
+			colour = Red
 		}
 		for j := 0; j < size; j++ {
 			b[i][j] = &Tile{i, j, true, nil, colour}
