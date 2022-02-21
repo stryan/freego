@@ -59,15 +59,16 @@ func DummyGame() (*Game, error) {
 
 	return g, nil
 }
-func main() {
-	//red := NewDummyPlayer(Red)
-	//blue := NewDummyPlayer(Blue)
-	_, err := DummyGame()
-	if err != nil {
-		panic(err)
-	}
-	return
-}
+
+//func main() {
+//	//red := NewDummyPlayer(Red)
+//blue := NewDummyPlayer(Blue)
+//	_, err := DummyGame()
+//	if err != nil {
+//		panic(err)
+//	}
+//	return
+//}
 
 func addpiece(game *Game, rank int, c Colour, x int, y int) {
 	res, err := game.SetupPiece(x, y, NewPieceFromInt(rank, c))
