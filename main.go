@@ -3,13 +3,10 @@ package main
 import (
 	"errors"
 	"fmt"
-	"log"
-	"time"
-
-	"github.com/hajimehoshi/ebiten/v2"
 )
 
-func dummyGame() (*Game, error) {
+//DummyGame Creates a dummygame
+func DummyGame() (*Game, error) {
 	g := &Game{
 		board: NewBoard(4),
 		state: gameSetup,
@@ -65,62 +62,11 @@ func dummyGame() (*Game, error) {
 func main() {
 	//red := NewDummyPlayer(Red)
 	//blue := NewDummyPlayer(Blue)
-	g, err := dummyGame()
+	_, err := DummyGame()
 	if err != nil {
 		panic(err)
 	}
-	go func(g *Game) {
-		r := NewDummyPlayer(Red)
-		b := NewDummyPlayer(Blue)
-		g.Start()
-		var moves = []struct {
-			input  string
-			player Player
-			res    bool
-		}{
-			{"c3-b3", r, true},
-			{"c0-c1", b, true},
-			{"d2xd1", r, true},
-			{"c1-d1", b, true},
-			{"b3-c3", r, true},
-			{"d1xd2", b, true},
-		}
-		for i, tt := range moves {
-			time.Sleep(3 * time.Second)
-			log.Printf("playing move %v\n", i)
-			raw, err := NewRawCommand(tt.input)
-			if err != nil {
-				panic(err)
-			}
-			parsed, err := g.Parse(tt.player, raw)
-			if err != nil {
-				panic(err)
-			}
-			res, err := g.Mutate(parsed)
-			if err != nil {
-				panic(err)
-			}
-			if res {
-				log.Printf("move %v successful\n", i)
-			}
-
-		}
-
-	}(g)
-	viewer(g)
 	return
-}
-
-func viewer(g *Game) {
-	v, err := NewViewer(g)
-	if err != nil {
-		panic(err)
-	}
-	ebiten.SetWindowSize(800, 640)
-	ebiten.SetWindowTitle("Freego")
-	if err := ebiten.RunGame(v); err != nil {
-		panic(err)
-	}
 }
 
 func addpiece(game *Game, rank int, c Colour, x int, y int) {
