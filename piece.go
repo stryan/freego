@@ -1,4 +1,4 @@
-package main
+package freego
 
 //Rank represents the rank of a piece
 //go:generate enumer -type=Rank

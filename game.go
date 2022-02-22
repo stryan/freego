@@ -1,4 +1,4 @@
-package main
+package freego
 
 import (
 	"errors"
@@ -31,24 +31,24 @@ const (
 
 //Game represents general game state
 type Game struct {
-	board *Board
+	Board *Board
 	state GameState
 }
 
 //NewGame creates a new game and sets the state to lobby
 func NewGame() *Game {
 	return &Game{
-		board: NewBoard(8),
+		Board: NewBoard(8),
 		state: gameLobby,
 	}
 }
 
 func (g *Game) String() string {
 	var board string
-	for i := 0; i < g.board.size; i++ {
+	for i := 0; i < g.Board.size; i++ {
 		board = board + "|"
-		for j := 0; j < g.board.size; j++ {
-			board = board + g.board.board[i][j].String()
+		for j := 0; j < g.Board.size; j++ {
+			board = board + g.Board.board[i][j].String()
 		}
 		board = board + "|\n"
 	}
@@ -61,20 +61,20 @@ func (g *Game) Parse(p Player, cmd *RawCommand) (*ParsedCommand, error) {
 	if g.state != gameTurnRed && g.state != gameTurnBlue {
 		return nil, errors.New("game has not started")
 	}
-	if !g.board.validatePoint(cmd.srcX, cmd.srcY) || !g.board.validatePoint(cmd.dstX, cmd.dstY) {
+	if !g.Board.validatePoint(cmd.srcX, cmd.srcY) || !g.Board.validatePoint(cmd.dstX, cmd.dstY) {
 		return nil, errors.New("invalid location in command")
 	}
 	if (p.Colour() == Red && g.state != gameTurnRed) || (p.Colour() == Blue && g.state != gameTurnBlue) {
 		return nil, errors.New("not your turn")
 	}
-	start, err := g.board.GetPiece(cmd.srcX, cmd.srcY)
+	start, err := g.Board.GetPiece(cmd.srcX, cmd.srcY)
 	if err != nil {
 		return nil, err
 	}
 	if cmd.act != "-" && cmd.act != "x" {
 		return nil, errors.New("invalid command action")
 	}
-	end, err := g.board.GetPiece(cmd.dstX, cmd.dstY)
+	end, err := g.Board.GetPiece(cmd.dstX, cmd.dstY)
 	if err != nil {
 		return nil, err
 	}
@@ -124,13 +124,13 @@ func (g *Game) SetupPiece(x, y int, p *Piece) (bool, error) {
 	if p == nil {
 		return false, errors.New("Tried to setup a nil piece")
 	}
-	if !g.board.validatePoint(x, y) {
+	if !g.Board.validatePoint(x, y) {
 		return false, errors.New("Invalid location")
 	}
-	if p.Owner != g.board.GetColor(x, y) {
-		return false, fmt.Errorf("Can't setup piece on enemy board: %v != %v", p.Owner, g.board.GetColor(x, y))
+	if p.Owner != g.Board.GetColor(x, y) {
+		return false, fmt.Errorf("Can't setup piece on enemy board: %v != %v", p.Owner, g.Board.GetColor(x, y))
 	}
-	return g.board.Place(x, y, p)
+	return g.Board.Place(x, y, p)
 }
 
 //Start start the game
@@ -143,11 +143,11 @@ func (g *Game) Start() bool {
 }
 
 func (g *Game) move(x, y, s, t int) (bool, error) {
-	startPiece, err := g.board.GetPiece(x, y)
+	startPiece, err := g.Board.GetPiece(x, y)
 	if err != nil {
 		return false, err
 	}
-	endPiece, err := g.board.GetPiece(s, t)
+	endPiece, err := g.Board.GetPiece(s, t)
 	if err != nil {
 		return false, err
 	}
@@ -158,12 +158,12 @@ func (g *Game) move(x, y, s, t int) (bool, error) {
 		return false, nil
 	}
 	//attempt to remove starting piece first
-	err = g.board.Remove(x, y)
+	err = g.Board.Remove(x, y)
 	if err != nil {
 		return false, err
 	}
 	// then place piece in new location
-	res, err := g.board.Place(s, t, startPiece)
+	res, err := g.Board.Place(s, t, startPiece)
 	if err != nil {
 		return false, err
 	}
@@ -171,11 +171,11 @@ func (g *Game) move(x, y, s, t int) (bool, error) {
 }
 
 func (g *Game) strike(x, y, s, t int) (bool, error) {
-	startPiece, err := g.board.GetPiece(x, y)
+	startPiece, err := g.Board.GetPiece(x, y)
 	if err != nil {
 		return false, err
 	}
-	endPiece, err := g.board.GetPiece(s, t)
+	endPiece, err := g.Board.GetPiece(s, t)
 	if err != nil {
 		return false, err
 	}
@@ -203,30 +203,30 @@ func (g *Game) strike(x, y, s, t int) (bool, error) {
 	switch r {
 	case -1:
 		//startPiece lost
-		err = g.board.Remove(x, y)
+		err = g.Board.Remove(x, y)
 		if err != nil {
 			return true, err
 		}
 	case 0:
 		//tie
-		err = g.board.Remove(x, y)
-		err2 := g.board.Remove(s, t)
+		err = g.Board.Remove(x, y)
+		err2 := g.Board.Remove(s, t)
 		if err != nil || err2 != nil {
 			return true, fmt.Errorf("Errors: %v %v", err, err2)
 		}
 	case 1:
 		//endPiece lost
-		err := g.board.Remove(s, t)
+		err := g.Board.Remove(s, t)
 		if err != nil {
 			return true, err
 		}
 		//scouts replace the piece that was destroyed
 		if startPiece.Rank == Scout {
-			err = g.board.Remove(x, y)
+			err = g.Board.Remove(x, y)
 			if err != nil {
 				return true, err
 			}
-			res, err := g.board.Place(s, t, startPiece)
+			res, err := g.Board.Place(s, t, startPiece)
 			if err != nil {
 				return true, err
 			}

@@ -1,4 +1,4 @@
-package main
+package freego
 
 import (
 	"errors"
@@ -8,7 +8,7 @@ import (
 
 func dummyMiniGame() (*Game, error) {
 	g := &Game{
-		board: NewBoard(4),
+		Board: NewBoard(4),
 		state: gameSetup,
 	}
 	//Setup terrain
@@ -19,7 +19,7 @@ func dummyMiniGame() (*Game, error) {
 		{2, 2, 1},
 	}
 	for _, tt := range terrain {
-		res, err := g.board.AddTerrain(tt.x, tt.y, tt.t)
+		res, err := g.Board.AddTerrain(tt.x, tt.y, tt.t)
 		if err != nil {
 			return nil, err
 		}

@@ -1,4 +1,4 @@
-package main
+package freego
 
 import (
 	"errors"
@@ -8,7 +8,7 @@ import (
 //DummyGame Creates a dummygame
 func DummyGame() (*Game, error) {
 	g := &Game{
-		board: NewBoard(4),
+		Board: NewBoard(4),
 		state: gameSetup,
 	}
 	//Setup terrain
@@ -19,7 +19,7 @@ func DummyGame() (*Game, error) {
 		{2, 2, 1},
 	}
 	for _, tt := range terrain {
-		res, err := g.board.AddTerrain(tt.x, tt.y, tt.t)
+		res, err := g.Board.AddTerrain(tt.x, tt.y, tt.t)
 		if err != nil {
 			return nil, err
 		}
@@ -81,7 +81,7 @@ func addpiece(game *Game, rank int, c Colour, x int, y int) {
 }
 
 func addriver(game *Game, x int, y int) {
-	res, err := game.board.AddTerrain(x, y, 1)
+	res, err := game.Board.AddTerrain(x, y, 1)
 	if err != nil {
 		panic(err)
 	}
@@ -91,12 +91,12 @@ func addriver(game *Game, x int, y int) {
 }
 
 func printboardcolours(g *Game) {
-	for i := range g.board.board {
-		for j := range g.board.board[i] {
+	for i := range g.Board.board {
+		for j := range g.Board.board[i] {
 			c := "X"
-			if g.board.board[i][j].colour == Red {
+			if g.Board.board[i][j].colour == Red {
 				c = "R"
-			} else if g.board.board[i][j].colour == Blue {
+			} else if g.Board.board[i][j].colour == Blue {
 				c = "B"
 			}
 			fmt.Printf("%v", c)

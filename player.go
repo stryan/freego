@@ -1,4 +1,4 @@
-package main
+package freego
 
 //Player represents a player of the game
 type Player interface {
