@@ -9,7 +9,7 @@ import (
 func dummyMiniGame() (*Game, error) {
 	g := &Game{
 		Board: NewBoard(4),
-		state: gameSetup,
+		State: gameSetup,
 	}
 	//Setup terrain
 	terrain := []struct {
@@ -65,7 +65,7 @@ func TestNewGame(t *testing.T) {
 	if g == nil {
 		t.Fatal("couldn't create game")
 	}
-	if g.state != gameLobby {
+	if g.State != gameLobby {
 		t.Error("Game created with weird state")
 	}
 }
@@ -78,7 +78,7 @@ func TestSetupPiece(t *testing.T) {
 	if err == nil || res == true {
 		t.Errorf("Expected to fail setup piece but didn't")
 	}
-	g.state = gameSetup
+	g.State = gameSetup
 	res, err = g.SetupPiece(0, 0, p2)
 	if err == nil || res == true {
 		t.Error("Expected to fail putting red piece on blue board")
@@ -103,7 +103,7 @@ func TestStart(t *testing.T) {
 	if res {
 		t.Fatal("expected to fail starting game due to state")
 	}
-	g.state = gameSetup
+	g.State = gameSetup
 	res = g.Start()
 	if !res {
 		t.Fatal("expected game to start")
@@ -115,7 +115,7 @@ func TestMiniCreation(t *testing.T) {
 	if err != nil {
 		t.Fatalf("mini game not created: %v", err)
 	}
-	if g.state != gameSetup {
+	if g.State != gameSetup {
 		t.Fatal("mini game not in right state")
 	}
 }
@@ -128,7 +128,7 @@ func TestMiniGameDemo(t *testing.T) {
 	if !g.Start() {
 		t.Fatal("could not start mini game")
 	}
-	if g.state != gameTurnRed {
+	if g.State != gameTurnRed {
 		t.Error("game starting on wrong turn")
 	}
 	r := NewDummyPlayer(Red)
@@ -177,7 +177,7 @@ func TestMiniGameFull(t *testing.T) {
 	if !g.Start() {
 		t.Fatal("could not start mini game")
 	}
-	if g.state != gameTurnRed {
+	if g.State != gameTurnRed {
 		t.Error("game starting on wrong turn")
 	}
 	r := NewDummyPlayer(Red)

@@ -9,7 +9,7 @@ import (
 func DummyGame() (*Game, error) {
 	g := &Game{
 		Board: NewBoard(4),
-		state: gameSetup,
+		State: gameSetup,
 	}
 	//Setup terrain
 	terrain := []struct {

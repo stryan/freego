@@ -32,14 +32,14 @@ const (
 //Game represents general game state
 type Game struct {
 	Board *Board
-	state GameState
+	State GameState
 }
 
 //NewGame creates a new game and sets the state to lobby
 func NewGame() *Game {
 	return &Game{
 		Board: NewBoard(8),
-		state: gameLobby,
+		State: gameLobby,
 	}
 }
 
@@ -53,18 +53,18 @@ func (g *Game) String() string {
 		board = board + "|\n"
 	}
 
-	return fmt.Sprintf("Status: %v\n%v", g.state, board)
+	return fmt.Sprintf("Status: %v\n%v", g.State, board)
 }
 
 //Parse a given RawCommand,  return a ParsedCommand or an error
 func (g *Game) Parse(p Player, cmd *RawCommand) (*ParsedCommand, error) {
-	if g.state != gameTurnRed && g.state != gameTurnBlue {
+	if g.State != gameTurnRed && g.State != gameTurnBlue {
 		return nil, errors.New("game has not started")
 	}
 	if !g.Board.validatePoint(cmd.srcX, cmd.srcY) || !g.Board.validatePoint(cmd.dstX, cmd.dstY) {
 		return nil, errors.New("invalid location in command")
 	}
-	if (p.Colour() == Red && g.state != gameTurnRed) || (p.Colour() == Blue && g.state != gameTurnBlue) {
+	if (p.Colour() == Red && g.State != gameTurnRed) || (p.Colour() == Blue && g.State != gameTurnBlue) {
 		return nil, errors.New("not your turn")
 	}
 	start, err := g.Board.GetPiece(cmd.srcX, cmd.srcY)
@@ -105,10 +105,10 @@ func (g *Game) Mutate(cmd *ParsedCommand) (bool, error) {
 		return false, err
 	}
 	if res {
-		if g.state == gameTurnRed {
-			g.state = gameTurnBlue
-		} else if g.state == gameTurnBlue {
-			g.state = gameTurnRed
+		if g.State == gameTurnRed {
+			g.State = gameTurnBlue
+		} else if g.State == gameTurnBlue {
+			g.State = gameTurnRed
 		} else {
 			return false, errors.New("bad game state")
 		}
@@ -118,7 +118,7 @@ func (g *Game) Mutate(cmd *ParsedCommand) (bool, error) {
 
 //SetupPiece adds a piece to the board during setup
 func (g *Game) SetupPiece(x, y int, p *Piece) (bool, error) {
-	if g.state != gameSetup {
+	if g.State != gameSetup {
 		return false, errors.New("Trying to setup piece when  not in setup")
 	}
 	if p == nil {
@@ -135,8 +135,8 @@ func (g *Game) SetupPiece(x, y int, p *Piece) (bool, error) {
 
 //Start start the game
 func (g *Game) Start() bool {
-	if g.state == gameSetup {
-		g.state = gameTurnRed
+	if g.State == gameSetup {
+		g.State = gameTurnRed
 		return true
 	}
 	return false
