@@ -7,9 +7,9 @@ import (
 	"fmt"
 )
 
-const _RankName = "FlagSpyScoutMinerCaptainGeneralMarshalBomb"
+const _RankName = "FlagSpyScoutMinerCaptainGeneralMarshalBombUnknown"
 
-var _RankIndex = [...]uint8{0, 4, 7, 12, 17, 24, 31, 38, 42}
+var _RankIndex = [...]uint8{0, 4, 7, 12, 17, 24, 31, 38, 42, 49}
 
 func (i Rank) String() string {
 	if i < 0 || i >= Rank(len(_RankIndex)-1) {
@@ -18,7 +18,7 @@ func (i Rank) String() string {
 	return _RankName[_RankIndex[i]:_RankIndex[i+1]]
 }
 
-var _RankValues = []Rank{0, 1, 2, 3, 4, 5, 6, 7}
+var _RankValues = []Rank{0, 1, 2, 3, 4, 5, 6, 7, 8}
 
 var _RankNameToValueMap = map[string]Rank{
 	_RankName[0:4]:   0,
@@ -29,6 +29,7 @@ var _RankNameToValueMap = map[string]Rank{
 	_RankName[24:31]: 5,
 	_RankName[31:38]: 6,
 	_RankName[38:42]: 7,
+	_RankName[42:49]: 8,
 }
 
 // RankString retrieves an enum value from the enum constants string name.

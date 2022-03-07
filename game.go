@@ -252,12 +252,11 @@ func (g *Game) combat(atk, def *Piece) (int, error) {
 	if atk == nil || def == nil {
 		return 0, errors.New("invalid attacker or defender")
 	}
-	if atk.Hidden {
-		return 0, errors.New("trying to attack with a piece we know nothing about?")
-	}
-	if def.Hidden {
+	if def.Hidden && def.Rank == Unknown {
 		return 0, errors.New("defender has not been revealed to us")
 	}
+	//reveal attacker
+	atk.Hidden = false
 	//handle special cases first
 	//miner hitting bomb
 	if atk.Rank == Miner && def.Rank == Bomb {

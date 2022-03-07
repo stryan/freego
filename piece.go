@@ -14,6 +14,7 @@ const (
 	General
 	Marshal
 	Bomb
+	Unknown
 )
 
 //Piece :game piece
@@ -37,14 +38,15 @@ func NewPiece(r Rank, o Colour) *Piece {
 	return &Piece{
 		Rank:   r,
 		Owner:  o,
-		Hidden: false,
+		Hidden: true,
 	}
 }
 
-//NewHiddenPiece creates a new hidden piece
-func NewHiddenPiece(o Colour) *Piece {
+//NewUnknownPiece creates a new hidden piece
+func NewUnknownPiece(o Colour) *Piece {
 	return &Piece{
 		Owner:  o,
+		Rank:   Unknown,
 		Hidden: true,
 	}
 }
