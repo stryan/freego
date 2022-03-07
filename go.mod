@@ -1,4 +1,4 @@
-module git.saintnet.tech/freego
+module git.saintnet.tech/stryan/freego
 
 go 1.17
 
