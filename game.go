@@ -142,6 +142,15 @@ func (g *Game) Start() bool {
 	return false
 }
 
+//Setup puts the game in setup mode
+func (g *Game) Setup() bool {
+	if g.State == gameLobby {
+		g.State = gameSetup
+		return true
+	}
+	return false
+}
+
 func (g *Game) move(x, y, s, t int) (bool, error) {
 	startPiece, err := g.Board.GetPiece(x, y)
 	if err != nil {
