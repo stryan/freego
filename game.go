@@ -7,6 +7,7 @@ import (
 )
 
 //GameState is an int representing the current state the game's in
+//go:generate enumer -type=GameState
 type GameState int
 
 const (
