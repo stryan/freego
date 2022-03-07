@@ -93,5 +93,5 @@ func (b *Board) IsTerrain(x, y int) (bool, error) {
 	if !b.validatePoint(x, y) {
 		return false, errors.New("River check invalid location")
 	}
-	return b.board[y][x].passable, nil
+	return !b.board[y][x].passable, nil
 }
