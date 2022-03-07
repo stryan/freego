@@ -87,3 +87,11 @@ func (b *Board) AddTerrain(x, y, t int) (bool, error) {
 	b.board[y][x].AddTerrain(t)
 	return true, nil
 }
+
+//IsTerrain checks if tile is terrain
+func (b *Board) IsTerrain(x, y int) (bool, error) {
+	if !b.validatePoint(x, y) {
+		return false, errors.New("River check invalid location")
+	}
+	return b.board[y][x].passable, nil
+}
